@@ -1,23 +1,21 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <v-header></v-header>
+    <tab></tab>
     <router-view/>
   </div>
 </template>
 
 <script>
+import header from 'components/header/header';
+import tab from 'components/tab/tab';
 export default {
-  name: 'App'
-}
+  components: {
+    'v-header': header,
+    tab
+  }
+};
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="stylus" rel="stylesheet/stylus">
 </style>
