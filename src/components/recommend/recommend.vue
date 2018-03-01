@@ -1,9 +1,9 @@
 <template>
   <div class="recommend">
     <div class="recommend-content">
-      <div class="slider-wrapper">
+      <div v-if="recommends.length" class="slider-wrapper">
         <slider>
-          <div v-for="item in recommends">
+          <div v-for="(item,index) in recommends" :key="index">
             <a :href="item.linkUrl">
               <img :src="item.picUrl" />
             </a>
@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      recommends: [1, 2, 3]
+      recommends: []
     };
   },
   created() {
@@ -42,5 +42,8 @@ export default {
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
   .recommend
-    text-align: center
+    .recommend-content
+      .slider-wrapper
+        position: relative
+        text-align: center
 </style>
