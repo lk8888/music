@@ -109,9 +109,6 @@ export default {
   @import '~common/stylus/variable.styl'
   .slider
     min-height: 1px
-    overflow: hidden
-    position: relative
-    text-align: center
     .slider-group
       position: relative
       overflow: hidden
@@ -134,7 +131,7 @@ export default {
       right: 0
       left: 0
       bottom: 12px
-      text-aliign: center
+      text-align: center
       font-size: 0
       .dot
         display: inline-block
