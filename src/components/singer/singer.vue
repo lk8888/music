@@ -1,26 +1,20 @@
 <template>
   <div class="singer">
-    <div class="title">热门</div>
-    <div class="singer-container">
-      <ul>
-        <li class="singer-item" v-for="(item,index) in singers" :key="index">
-          <span class="avatar">
-            <img :src="item.avatar" />
-          </span>
-          <span class="name">{{item.name}}</span>
-        </li>
-      </ul>
-    </div>
+    <listview :data="singers"></listview>
   </div>
 </template>
 <script>
 import { getSinger } from 'api/singer';
 import { ERR_OK } from 'api/config';
 import Singer from 'common/js/Singer';
+import listview from 'base/listview/listview';
 
 const HOT_NAME = '热门';
 const HOT_SINGER_LENGTH = 10;
 export default {
+  components: {
+    listview
+  },
   data() {
     return {
       singers: []
@@ -90,34 +84,4 @@ export default {
     top: 88px
     bottom: 0
     width: 100%
-    .title
-      line-height: 25px
-      padding-left: 15px
-      width: 100%
-      height: 25px
-      font-size: $font-size-small
-      color: $color-text-d
-      background-color: $color-highlight-background
-    .singer-container
-      .singer-item
-        display: flex
-        align-items: center
-        padding: 20px 20px 0 20px
-        .icon
-          flex: 0 0 60px
-          width: 60px
-          height: 60px
-          margin-right: 20px
-          border-radius: 50%
-          background: #fff
-          text-align: center
-          color: #333
-          line-height: 60px
-        .name
-          display: flex
-          flex-direction: column
-          justify-conent: center
-          flex: 1
-          font-size: $font-size-medium
-          color: $color-text-l
 </style>

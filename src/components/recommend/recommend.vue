@@ -20,7 +20,7 @@
               </div>
               <div class="desc">
                 <p class="text">{{item.title}}</p>
-                <p class="listen_num">播放量: {{toUnit(item.listen_num)}}</p>
+                <p class="listen_num">播放量: {{playVolume(item.listen_num)}}</p>
               </div>
             </li>
           </ul>
@@ -69,11 +69,8 @@ export default {
         }
       });
     },
-    toUnit(num) {
-      if (num < 10000) {
-        return;
-      }
-      return (num / 10000).toFixed(1) + '万';
+    playVolume(num) {
+      return num > 10000 ? (num / 10000).toFixed(1) + '万' : num;
     },
     loadImgage() {
       if (!this.checkloaded) {
@@ -124,6 +121,7 @@ export default {
             font-size: $font-size-medium
             .listen_num
               color: #999
+              margin-top: 10px
       .loading-container
         position: absolute
         width: 100%
