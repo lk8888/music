@@ -23,7 +23,7 @@ export default {};
     display: flex
     line-height: 44px
     height: 44px
-    font-size: $font-size-midium
+    font-size: $font-size-medium
     .tab-item
       flex: 1
       text-align: center

@@ -2,12 +2,10 @@
   <scroll class="listview" :data="data" ref="listview" :listenScroll="listenScroll" :probeType="probeType" @scroll="scroll">
     <ul>
       <li class="list-group" v-for="(group,index) in data" :key="index" ref="listGroup">
-        <h1 class="list-group-title">{{group.title}}</h1>
+        <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
           <li class="list-group-item" v-for="(item,index) in group.items" :key="index">
-            <span class="avatar">
-              <img v-lazy="item.avatar" width="50" height="50" />
-            </span>
+            <img class="avatar" v-lazy="item.avatar" />
             <span class="name">{{item.name}}</span>
           </li>
         </ul>
@@ -20,12 +18,20 @@
         </li>
       </ul>
     </div>
+    <div class="list-fixed" v-show="fixedTitle" ref="listFixed">
+      <h1 class="fixed-title">{{fixedTitle}}</h1>
+    </div>
+    <div class="loading-container" v-show="!data.length">
+      <loading></loading>
+    </div>
   </scroll>
 </template>
 <script>
 import scroll from 'base/scroll/scroll';
+import loading from 'base/loading/loading';
 import { getData } from 'common/js/dom';
 const ANCHOR_HEIGHT = 18;
+const TITLE_HEIGHT = 30;
 export default {
   props: {
     data: {
@@ -34,14 +40,16 @@ export default {
     }
   },
   components: {
-    scroll
+    scroll,
+    loading
   },
   data() {
     return {
       scrollY: -1,
       currentIndex: 0,
       listHeight: [],
-      probeType: 3
+      probeType: 3,
+      diff: -1
     };
   },
   computed: {
@@ -49,6 +57,12 @@ export default {
       return this.data.map((group) => {
         return group.title.substr(0, 1);
       });
+    },
+    fixedTitle() {
+      if (this.scrollY > 0) {
+        return;
+      }
+      return this.data[this.currentIndex] ? this.data[this.currentIndex].title : '';
     }
   },
   created() {
@@ -74,6 +88,15 @@ export default {
       this.scrollY = pos.y;
     },
     _scrollTo(index) {
+      if (!index && index !== 0) {
+        return;
+      }
+      if (index < 0) {
+        index = 0;
+      } else if (index > this.listHeight.length - 2) {
+        index = this.listHeight.length - 2;
+      }
+      this.scrollY = -this.listHeight[index];
       this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0);
     },
     _calculateHeight() {
@@ -96,15 +119,31 @@ export default {
     },
     scrollY(newY) {
       const listHeight = this.listHeight;
-      for (let i = 0; i < listHeight.length; i++) {
+      // 当滚动到顶部，newY>0
+      if (newY > 0) {
+        this.currntIndex = 0;
+        return;
+      }
+      // 在中间部分滚动
+      for (let i = 0; i < listHeight.length - 1; i++) {
         let height1 = listHeight[i];
         let height2 = listHeight[i + 1];
-        if (!height2 || (-newY > height1 && -newY < height2)) {
+        if (-newY >= height1 && -newY < height2) {
           this.currentIndex = i;
+          this.diff = height2 + newY;
           return;
         }
       }
-      this.currentIndex = 0;
+      // 当滚动到底部， 且-newY大于最后一个元素的上限
+      this.currentIndex = listHeight.length - 2;
+    },
+    diff(newVal) {
+      let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0;
+      if (this.fixedTop === fixedTop) {
+        return;
+      }
+      this.fixedTop = fixedTop;
+      this.$refs.listFixed.style.transform = `translate3d(0, ${fixedTop}px, 0)`;
     }
   }
 };
@@ -114,6 +153,7 @@ export default {
 
   .listview
     position: relative
+    top: 0
     width: 100%
     height: 100%
     overflow: hidden
@@ -138,12 +178,8 @@ export default {
           width: 50px
           height: 50px
           margin-right: 20px
-          img
-            border-radius: 50%
+          border-radius: 50%
         .name
-          display: flex
-          flex-direction
-          justify-content: center
           flex: 1
           font-size: $font-size-medium
           color: $color-text-l
@@ -166,4 +202,21 @@ export default {
         line-height: 1
         &.current
           color: $color-theme
+    .list-fixed
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      .fixed-title
+        height: 30px
+        line-height: 30px
+        padding-left: 20px
+        background-color: $color-highlight-background
+        font-size: $font-size-small
+        color: $color-text-l
+    .loading-container
+      position: absolute
+      top: 50%
+      width: 100%
+      transform: translateY(-50%)
 </style>
