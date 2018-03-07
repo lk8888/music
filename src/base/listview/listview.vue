@@ -4,7 +4,7 @@
       <li class="list-group" v-for="(group,index) in data" :key="index" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
-          <li class="list-group-item" v-for="(item,index) in group.items" :key="index">
+          <li class="list-group-item" v-for="(item,index) in group.items" :key="index" @click="selectItem(item)">
             <img class="avatar" v-lazy="item.avatar" />
             <span class="name">{{item.name}}</span>
           </li>
@@ -87,6 +87,9 @@ export default {
     scroll(pos) {
       this.scrollY = pos.y;
     },
+    selectItem(item) {
+      this.$emit('selectItem', item);
+    },
     _scrollTo(index) {
       if (!index && index !== 0) {
         return;
@@ -167,9 +170,10 @@ export default {
         height: 30px
         font-size: $font-size-small
         color: $color-text-l
-        background-color: $color-highlight-background
+        background-color: $color-hightlight-background
       .list-group-item
         display: flex
+        box-sizing: border-box
         padding: 20px 0 0 30px
         align-items: center
         font-size: 0
@@ -194,7 +198,7 @@ export default {
       text-align: center
       color: $color-text-l
       font-size: $font-size-small
-      background-color: $color-background-d
+      background-color: $color-hightlight-background-d
       border-radius: 10px
       font-family: Helvetica
       .shortcut-item
@@ -211,7 +215,7 @@ export default {
         height: 30px
         line-height: 30px
         padding-left: 20px
-        background-color: $color-highlight-background
+        background-color: $color-background
         font-size: $font-size-small
         color: $color-text-l
     .loading-container

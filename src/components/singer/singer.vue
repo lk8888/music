@@ -1,11 +1,13 @@
 <template>
   <div class="singer">
-    <listview :data="singers"></listview>
+    <listview :data="singers" @selectItem="selectSinger"></listview>
+    <router-view></router-view>
   </div>
 </template>
 <script>
-import { getSinger } from 'api/singer';
+import { getSingers } from 'api/singer';
 import { ERR_OK } from 'api/config';
+import { mapMutations } from 'vuex';
 import Singer from 'common/js/Singer';
 import listview from 'base/listview/listview';
 
@@ -21,14 +23,19 @@ export default {
     };
   },
   created() {
-    this._getSinger();
+    this._getSingers();
   },
   methods: {
-    _getSinger() {
-      getSinger().then((res) => {
+    selectSinger(singer) {
+      this.$router.push({
+        path: `/singer/${singer.id}`
+      });
+      this.setSinger(singer);
+    },
+    _getSingers() {
+      getSingers().then((res) => {
         if (res.code === ERR_OK) {
           this.singers = this._normalizeSinger(res.data.list);
-          console.log(this.singers);
         }
       });
     },
@@ -73,7 +80,10 @@ export default {
         return a.title.charCodeAt(0) - b.title.charCodeAt(0);
       });
       return hot.concat(ret);
-    }
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    })
   }
 };
 </script>
