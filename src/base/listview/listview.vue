@@ -160,7 +160,7 @@ export default {
     width: 100%
     height: 100%
     overflow: hidden
-    background: $color-background
+    background: $color-highlight-background
     .list-group
       padding-bottom: 30px
       .list-group-title
@@ -170,7 +170,7 @@ export default {
         height: 30px
         font-size: $font-size-small
         color: $color-text-l
-        background-color: $color-hightlight-background
+        background-color: $color-background
       .list-group-item
         display: flex
         box-sizing: border-box
@@ -220,7 +220,5 @@ export default {
         color: $color-text-l
     .loading-container
       position: absolute
-      top: 50%
       width: 100%
-      transform: translateY(-50%)
 </style>

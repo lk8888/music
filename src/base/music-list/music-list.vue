@@ -4,13 +4,15 @@
       <i class="icon-back" @click="back"></i>
     </div>
     <h1 class="singer-name">{{singer.name}}</h1>
-    <div class="singer-avatar" ref="avatar">
-      <img :src="singer.avatar" />
+    <div class="singer-avatar" :style="bgStyle" ref="avatar">
       <div class="filter"></div>
     </div>
     <scroll class="list" :data="songs" ref="list" :probeType="probeType">
       <div class="song-list-wrapper">
         <song-list :songs="songs"></song-list>
+      </div>
+      <div class="loading-container" v-show="!songs.length">
+        <loading></loading>
       </div>
     </scroll>
   </div>
@@ -18,6 +20,7 @@
 <script>
 import scroll from 'base/scroll/scroll';
 import songList from 'base/song-list/song-list';
+import loading from 'base/loading/loading';
 export default {
   props: {
     songs: {
@@ -27,14 +30,20 @@ export default {
       type: Object
     }
   },
-  data() {
+  components: {
+    scroll,
+    songList,
+    loading
+  },
+   data() {
     return {
       probeType: 3
     };
   },
-  components: {
-    scroll,
-    songList
+  computed: {
+    bgStyle() {
+      return `background-image:url(${this.singer.avatar})`;
+    }
   },
   mounted() {
     this.$refs.list.$el.style.top = `${this.$refs.avatar.clientHeight}px`;
@@ -48,44 +57,43 @@ export default {
 </script>
 <style lang="stylus" rel="stylesheet">
   @import '~common/stylus/variable.styl'
+  @import '~common/stylus/mixin.styl'
   .music-list
     position: fixed
     top: 0
     bottom: 0
     left: 0
-    z-index: 50
+    z-index: 100
     width: 100%
-    overflow: hidden
     background-color: $color-background
     .icon-wrapper
       position: absolute
-      top: 15px
-      left: 15px
-      z-index: 40
+      top: 0
+      left: 6
+      z-index: 50
       .icon-back
-        font-size: $font-size-medium-x
+        display: block
+        padding: 10px
+        font-size: $font-size-large-x
         color: $color-theme
     .singer-name
       position: absolute
-      top: 15px
-      left: 50%
-      transform: translateX(-50%)
+      top: 0
+      left: 10%
+      width: 80%
       z-index: 40
-      white-space:nowrap
-      font-size: $font-size-large
+      line-height: 40px
+      text-align: center
+      no-wrap()
       color: $color-text
+      font-size: $font-size-large
     .singer-avatar
       position: relative
       width: 100%
       height: 0
       padding-top: 70%
-      z-index: 30
-      img
-        position: absolute
-        top: 0
-        left: 0
-        width: 100%
-        height: 100%
+      transform-origin: top
+      background-size: cover
       .filter
         position: absolute
         top: 0
@@ -94,8 +102,17 @@ export default {
         height: 100%
         background-color: rgba(7, 17, 27, 0.4)
     .list
-      position: absolute
+      position: fixed
+      top: 0
       bottom: 0
-      z-index: 20
       width: 100%
+      overflow: hidden
+      background-color: $color-background
+      .song-list-wrapper
+        padding: 20px 30px
+      .loading-container
+        position: absolute
+        top: 50%
+        transform: translateY(-50%)
+        width: 100%
 </style>
