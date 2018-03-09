@@ -220,5 +220,7 @@ export default {
         color: $color-text-l
     .loading-container
       position: absolute
+      top: 50%
+      transform: translateY(-50%)
       width: 100%
 </style>
